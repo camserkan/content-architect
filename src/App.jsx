@@ -26,6 +26,7 @@ import {
   FileJson,
   FileCode2,
 } from "lucide-react";
+import { supabase } from "./supabaseClient";
 
 const LS_KEY = "content_architect_v2_single_snapshot";
 
@@ -127,6 +128,17 @@ const UI_LOCALES = {
       "Kısayollar: Space(play/pause) · ←/→ (beat) · M (mirror) · D (cues) · C (contrast) · +/- (font) · Esc (çık)",
     noCues: "Cue yok",
     noTimeMap: "Time Map yok. Önce script üret.",
+
+    // Teleprompter overlay UI labels (must follow outputLanguage)
+    exitToMain: "Ana ekrana dön",
+    beat: "Beat",
+    copy: "Kopyala",
+    pace: "Tempo",
+    tag: "Etiket",
+    on: "Açık",
+    off: "Kapalı",
+    high: "Yüksek",
+    normal: "Normal",
   },
   en: {
     appTitle: "Content-Architect v2",
@@ -188,6 +200,17 @@ const UI_LOCALES = {
       "Shortcuts: Space(play/pause) · ←/→ (beat) · M (mirror) · D (cues) · C (contrast) · +/- (font) · Esc (exit)",
     noCues: "No cues",
     noTimeMap: "No Time Map. Generate a script first.",
+
+    // Teleprompter overlay UI labels (must follow outputLanguage)
+    exitToMain: "Exit to Main",
+    beat: "Beat",
+    copy: "Copy",
+    pace: "Pace",
+    tag: "Tag",
+    on: "On",
+    off: "Off",
+    high: "High",
+    normal: "Normal",
   },
 };
 
@@ -883,7 +906,7 @@ function deriveDirectorCues(row, tpKey, preset) {
   return cues.slice(0, 10);
 }
 
-// Section label colors (kept)
+// Section label colors
 const SECTION_COLORS = {
   hook: "#ff4d6d",
   scene: "#6ae4ff",
@@ -1152,7 +1175,7 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
           <div style={{ opacity: 0.85 }}>{tpT.noTimeMap}</div>
           <div style={{ marginTop: 12 }}>
             <button style={btn} onClick={onClose}>
-              Exit to Main
+              {tpT.exitToMain}
             </button>
           </div>
         </div>
@@ -1182,7 +1205,7 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
             <span style={{ ...pill, borderColor: `${sectionColor}55`, color: sectionColor }}>{sectionLabel}</span>
 
             <span style={pill}>
-              Beat: {beatIndex + 1}/{totalBeats} · <b>{currentBeat?.label || "—"}</b>
+              {tpT.beat}: {beatIndex + 1}/{totalBeats} · <b>{currentBeat?.label || "—"}</b>
             </span>
 
             <span style={pill}>
@@ -1224,17 +1247,17 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
             </button>
 
             <button style={btn} onClick={() => setMirror((v) => !v)} title="M">
-              {tpT.mirror}: {mirror ? "On" : "Off"}
+              {tpT.mirror}: {mirror ? tpT.on : tpT.off}
             </button>
             <button style={btn} onClick={() => setShowCues((v) => !v)} title="D">
-              {tpT.cues}: {showCues ? "On" : "Off"}
+              {tpT.cues}: {showCues ? tpT.on : tpT.off}
             </button>
             <button style={btn} onClick={() => setHighContrast((v) => !v)} title="C">
-              {tpT.contrast}: {highContrast ? "High" : "Normal"}
+              {tpT.contrast}: {highContrast ? tpT.high : tpT.normal}
             </button>
 
             <button style={btn} onClick={copyCurrentText}>
-              Copy
+              {tpT.copy}
             </button>
 
             <button style={btn} onClick={requestFullscreen}>
@@ -1251,7 +1274,7 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
                 onClose?.();
               }}
             >
-              Exit to Main
+              {tpT.exitToMain}
             </button>
           </div>
         </div>
@@ -1276,10 +1299,10 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
       {/* PROMPTER */}
       <div style={prompterStyle}>
         {/* Pace/Tag line 200% bigger */}
-        <div style={{ opacity: 0.78, fontSize: Math.round(32 * fontScale), marginBottom: 14 }}>
+        <div style={{ opacity: 0.78, fontSize: Math.round(68 * fontScale), marginBottom: 14 }}>
           {currentBeat?.label || "—"} · {formatMs(durationMs)} ·{" "}
-          <span style={{ color: sectionColor, fontWeight: 900 }}>{sectionLabel}</span> · Pace: {currentBeat?.pace || "—"} ·
-          Tag: {currentBeat?.intensityTag || "—"}
+          <span style={{ color: sectionColor, fontWeight: 900 }}>{sectionLabel}</span> · {tpT.pace}: {currentBeat?.pace || "—"} ·{" "}
+          {tpT.tag}: {currentBeat?.intensityTag || "—"}
         </div>
 
         {/* flowing text color by starting character */}
@@ -1290,9 +1313,55 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
 }
 
 /* -----------------------------
-   Main App
+   Auth-gated App (FIX: stable hook order)
 ------------------------------ */
 export default function App() {
+  const [session, setSession] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        if (!mounted) return;
+        setSession(data.session || null);
+        setAuthLoading(false);
+      })
+      .catch(() => {
+        if (!mounted) return;
+        setSession(null);
+        setAuthLoading(false);
+      });
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+    });
+
+    return () => {
+      mounted = false;
+      sub?.subscription?.unsubscribe?.();
+    };
+  }, []);
+
+  if (authLoading) {
+    return (
+      <div style={{ padding: 24, color: "white", fontFamily: "ui-sans-serif, system-ui" }}>
+        Loading...
+      </div>
+    );
+  }
+
+  if (!session) return <AuthScreen />;
+
+  return <AuthedApp />;
+}
+
+/* -----------------------------
+   Main App (authed)
+------------------------------ */
+function AuthedApp() {
   const [state, setState] = useState(() => ({
     platforms: ["LinkedIn"],
     uiLanguage: "Turkish",
@@ -1345,7 +1414,7 @@ export default function App() {
 
   const displayLang = state.outputLanguage || state.uiLanguage;
 
-  // Teleprompter locale must follow OUTPUT language (your request)
+  // Teleprompter locale must follow OUTPUT language
   const tpKey = tpLocaleFromOutput(displayLang);
   const tpT = UI_LOCALES[tpKey];
 
@@ -1436,7 +1505,7 @@ export default function App() {
     setTimeline(tl);
   }, [state.script, state.inventory, state.tempoPreset, state.durationSec, preset]);
 
-  // IMPORTANT: teleprompter time-map uses tpKey (output language)
+  // Teleprompter time-map uses tpKey (output language)
   const teleTimeMap = useMemo(() => buildTeleprompterTimeMap(tempoMap, preset, tpKey), [tempoMap, preset, tpKey]);
 
   function resetAll() {
@@ -1611,6 +1680,18 @@ export default function App() {
         <div className="row">
           <button className="btn btn-green" onClick={() => setTeleprompterOpen(true)} disabled={!tempoMap.length}>
             <Film size={16} /> {t.openTeleprompter}
+          </button>
+
+          <button
+            className="btn"
+            onClick={async () => {
+              try {
+                await supabase.auth.signOut();
+              } catch {}
+            }}
+            title="Sign out"
+          >
+            Logout
           </button>
 
           <button className="btn" onClick={() => setSidebarOpen((v) => !v)}>
@@ -2167,6 +2248,156 @@ export default function App() {
           margin-bottom: 10px;
         }
       `}</style>
+    </div>
+  );
+}
+
+/* -----------------------------
+   Auth Screen (Supabase)
+------------------------------ */
+function AuthScreen() {
+  const [mode, setMode] = useState("login"); // "login" | "signup"
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState("");
+
+  async function onSubmit(e) {
+    e.preventDefault();
+    setMsg("");
+    setBusy(true);
+    try {
+      if (mode === "signup") {
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) throw error;
+        setMsg("Signup OK. Please check your email (if confirmation is enabled), then login.");
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        setMsg("Login OK.");
+      }
+    } catch (err) {
+      setMsg(err?.message || String(err));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "grid",
+        placeItems: "center",
+        background: "#0b0b0c",
+        color: "#f5f5f7",
+        padding: 20,
+        fontFamily:
+          'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"',
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 420,
+          border: "1px solid rgba(255,255,255,0.12)",
+          borderRadius: 16,
+          padding: 18,
+          background: "rgba(255,255,255,0.04)",
+        }}
+      >
+        <div style={{ fontWeight: 900, fontSize: 18, marginBottom: 8 }}>
+          {mode === "signup" ? "Create account" : "Sign in"}
+        </div>
+        <div style={{ opacity: 0.8, fontSize: 13, marginBottom: 14 }}>
+          Content-Architect access is limited to registered users.
+        </div>
+
+        <form onSubmit={onSubmit} style={{ display: "grid", gap: 10 }}>
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            type="email"
+            required
+            style={{
+              padding: "12px 12px",
+              borderRadius: 12,
+              border: "1px solid rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.06)",
+              color: "inherit",
+            }}
+          />
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password (min 6)"
+            type="password"
+            required
+            style={{
+              padding: "12px 12px",
+              borderRadius: 12,
+              border: "1px solid rgba(255,255,255,0.12)",
+              background: "rgba(255,255,255,0.06)",
+              color: "inherit",
+            }}
+          />
+
+          <button
+            disabled={busy}
+            type="submit"
+            style={{
+              padding: "12px 12px",
+              borderRadius: 12,
+              border: "1px solid rgba(255,255,255,0.18)",
+              background: "rgba(255,255,255,0.10)",
+              color: "inherit",
+              fontWeight: 900,
+              cursor: "pointer",
+            }}
+          >
+            {busy ? "..." : mode === "signup" ? "Create account" : "Sign in"}
+          </button>
+        </form>
+
+        <div style={{ marginTop: 12, display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+          <button
+            type="button"
+            onClick={() => setMode((m) => (m === "login" ? "signup" : "login"))}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "rgba(255,255,255,0.85)",
+              cursor: "pointer",
+              fontWeight: 900,
+              padding: 0,
+            }}
+          >
+            {mode === "login" ? "Create an account" : "I already have an account"}
+          </button>
+
+          <button
+            type="button"
+            onClick={async () => {
+              setMsg("");
+              await supabase.auth.signOut();
+            }}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "rgba(255,255,255,0.55)",
+              cursor: "pointer",
+              fontWeight: 800,
+              padding: 0,
+            }}
+            title="Sign out"
+          >
+            Sign out
+          </button>
+        </div>
+
+        {msg ? <div style={{ marginTop: 12, fontSize: 13, opacity: 0.9 }}>{msg}</div> : null}
+      </div>
     </div>
   );
 }
