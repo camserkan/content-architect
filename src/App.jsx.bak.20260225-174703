@@ -24,13 +24,6 @@ import {
   LogOut,
   UserPlus,
   KeyRound,
-
-  // ✅ FIX: missing icons used in Inventory section
-  Camera,
-  Aperture,
-  Lightbulb,
-  Mic,
-  Smartphone,
 } from "lucide-react";
 
 const LS_KEY = "content_architect_v2_single_snapshot";
