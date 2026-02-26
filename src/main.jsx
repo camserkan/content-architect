@@ -11,24 +11,37 @@ const showFatal = (label, err) => {
   } catch {}
 };
 
-window.addEventListener("error", (e) => showFatal("window.error", e.error || e.message));
-window.addEventListener("unhandledrejection", (e) => showFatal("unhandledrejection", e.reason));
+window.addEventListener("error", (e) =>
+  showFatal("window.error", e.error || e.message)
+);
+window.addEventListener("unhandledrejection", (e) =>
+  showFatal("unhandledrejection", e.reason)
+);
 
 try {
   const root = document.getElementById("root");
-  if (root) root.innerHTML = "<div style='padding:12px;color:#9ae6b4;font-family:ui-monospace'>Booting…</div>";
+  if (root) {
+    root.innerHTML =
+      "<div style='padding:12px;color:#9ae6b4;font-family:ui-monospace'>Booting…</div>";
+  }
 } catch (e) {
   showFatal("bootstrap", e);
 }
 // --- END DEBUG BOOTSTRAP ---
 
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.jsx";
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+try {
+  const el = document.getElementById("root");
+  if (!el) throw new Error("#root not found");
+
+  createRoot(el).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} catch (e) {
+  showFatal("render", e);
+}
