@@ -1,3 +1,7 @@
+import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.jsx";
+
 // --- DEBUG BOOTSTRAP (temporary) ---
 const showFatal = (label, err) => {
   try {
@@ -28,10 +32,6 @@ try {
   showFatal("bootstrap", e);
 }
 // --- END DEBUG BOOTSTRAP ---
-
-import React from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App.jsx";
 
 try {
   const el = document.getElementById("root");
