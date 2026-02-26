@@ -319,3 +319,10 @@ textarea {
   box-shadow: 0 10px 34px rgba(0,0,0,0.45);
   font-weight: 800;
 }
+
+/* --- TEMP DEBUG: force visibility (remove after fix) --- */
+html, body, #root { min-height: 100vh !important; }
+#root { position: relative !important; z-index: 0 !important; }
+/* Only force visibility if something is hiding everything */
+body { overflow: auto !important; }
+/* --- END TEMP DEBUG --- */
