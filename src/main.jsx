@@ -37,6 +37,12 @@ try {
   const el = document.getElementById("root");
   if (!el) throw new Error("#root not found");
 
+  // Visible badge: confirms JS runs and body isn't hidden by CSS
+  document.body.insertAdjacentHTML(
+    "afterbegin",
+    "<div style='position:fixed;top:10px;left:10px;z-index:1000000;background:yellow;color:black;padding:8px;font:14px monospace'>DEBUG: JS RUNNING</div>"
+  );
+
   createRoot(el).render(
     <React.StrictMode>
       <App />
