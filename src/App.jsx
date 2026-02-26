@@ -24,8 +24,7 @@ import {
   LogOut,
   UserPlus,
   KeyRound,
-
-  // ✅ FIX: missing icons used in Inventory section
+  // ✅ FIX: icons used in Inventory section
   Camera,
   Aperture,
   Lightbulb,
@@ -36,9 +35,7 @@ import {
 const LS_KEY = "content_architect_v2_single_snapshot";
 const LS_PENDING_PROFILE = "ca_pending_profile_v1";
 
-/* -----------------------------
-   utils
------------------------------- */
+/* ----------------------------- utils ------------------------------ */
 function uid() {
   return Math.random().toString(16).slice(2) + "-" + Date.now().toString(16);
 }
@@ -70,9 +67,7 @@ function wordCount(s) {
   return t.split(/\s+/).filter(Boolean).length;
 }
 
-/* -----------------------------
-   Language policy
------------------------------- */
+/* ----------------------------- Language policy ------------------------------ */
 const UI_LOCALES = {
   tr: {
     appTitle: "Content-Architect v2",
@@ -114,7 +109,6 @@ const UI_LOCALES = {
     outputRule: "Her üretimde çıktı dili zorlanır.",
     timeMapFix: "Sadece 'Scene X:' veya 'Sahne X:' sahne sayılır. Transition/B-roll sayılmaz.",
     aspectRatio: "Aspect Ratio",
-
     teleprompter: "TP",
     openTeleprompter: "TP",
     mirror: "Mirror",
@@ -130,21 +124,19 @@ const UI_LOCALES = {
     emotion: "Duygu",
     intensity: "Yoğunluk",
     left: "Kalan",
-    shortcuts: "Kısayollar: Space(play/pause) · ←/→ (beat) · M (mirror) · D (cues) · C (contrast) · +/- (font) · Esc (çık)",
+    shortcuts:
+      "Kısayollar: Space(play/pause) · ←/→ (beat) · M (mirror) · D (cues) · C (contrast) · +/- (font) · Esc (çık)",
     noCues: "Cue yok",
     noTimeMap: "Time Map yok. Önce script üret.",
-
     account: "Hesap",
     app: "Uygulama",
     guest: "Misafir",
     login: "Giriş",
     logout: "Çıkış",
-
     accessRequired: "Erişim gerekli",
     accessLogin: "Giriş yap",
     accessPaid: "Üyelik gerekli",
     accessCredits: "Kredi gerekli",
-
     authTitle: "Hesap",
     signIn: "Giriş Yap",
     signUp: "Kayıt Ol",
@@ -210,7 +202,6 @@ const UI_LOCALES = {
     outputRule: "Return language is forced on every generation.",
     timeMapFix: "Only 'Scene X:' or 'Sahne X:' counts as scene. Transition/B-roll do not.",
     aspectRatio: "Aspect Ratio",
-
     teleprompter: "TP",
     openTeleprompter: "TP",
     mirror: "Mirror",
@@ -226,21 +217,19 @@ const UI_LOCALES = {
     emotion: "Emotion",
     intensity: "Intensity",
     left: "Left",
-    shortcuts: "Shortcuts: Space(play/pause) · ←/→ (beat) · M (mirror) · D (cues) · C (contrast) · +/- (font) · Esc (exit)",
+    shortcuts:
+      "Shortcuts: Space(play/pause) · ←/→ (beat) · M (mirror) · D (cues) · C (contrast) · +/- (font) · Esc (exit)",
     noCues: "No cues",
     noTimeMap: "No Time Map. Generate a script first.",
-
     account: "Account",
     app: "App",
     guest: "Guest",
     login: "Login",
     logout: "Logout",
-
     accessRequired: "Access required",
     accessLogin: "Please login",
     accessPaid: "Paid plan required",
     accessCredits: "Credits required",
-
     authTitle: "Account",
     signIn: "Sign in",
     signUp: "Sign up",
@@ -275,15 +264,21 @@ function tpLocaleFromOutput(outputLanguage) {
   return outputLanguage === "Turkish" ? "tr" : "en";
 }
 
-/* -----------------------------
-   Platform options (multi-select)
------------------------------- */
-const PLATFORM_OPTIONS = ["Instagram Reels", "TikTok", "YouTube Shorts", "YouTube Long", "LinkedIn", "Facebook", "Promo", "Landing", "Podcast"];
+/* ----------------------------- Platform options (multi-select) ------------------------------ */
+const PLATFORM_OPTIONS = [
+  "Instagram Reels",
+  "TikTok",
+  "YouTube Shorts",
+  "YouTube Long",
+  "LinkedIn",
+  "Facebook",
+  "Promo",
+  "Landing",
+  "Podcast",
+];
 const ASPECT_OPTIONS = ["9:16", "4:5", "1:1", "16:9"];
 
-/* -----------------------------
-   Preset engine
------------------------------- */
+/* ----------------------------- Preset engine ------------------------------ */
 function derivePreset(platforms, durationSec, tempoPreset, aspectRatioSelected) {
   const p = new Set(platforms);
   const primary =
@@ -358,16 +353,38 @@ function derivePreset(platforms, durationSec, tempoPreset, aspectRatioSelected) 
   return base;
 }
 
-/* -----------------------------
-   Guidelines snippet loading
------------------------------- */
+/* ----------------------------- Guidelines snippet loading ------------------------------ */
 const FALLBACK_GUIDELINES = {
-  LinkedIn: { platform: "LinkedIn", updatedAt: "fallback", specs: { notes: ["Professional tone", "Subtitles recommended", "Avoid overly aggressive claims"] } },
-  Facebook: { platform: "Meta (Facebook)", updatedAt: "fallback", specs: { notes: ["Mobile-first", "Thumb-stopping first 2 seconds", "Clear CTA"] } },
-  "Instagram Reels": { platform: "Instagram Reels", updatedAt: "fallback", specs: { notes: ["Mobile-first 9:16", "Hook in first 1–2 seconds", "On-screen captions"] } },
-  TikTok: { platform: "TikTok", updatedAt: "fallback", specs: { notes: ["Fast hook", "Pattern interrupts", "Clear CTA"] } },
-  "YouTube Shorts": { platform: "YouTube Shorts", updatedAt: "fallback", specs: { notes: ["Hook fast", "High retention pacing", "Subscribe CTA"] } },
-  "YouTube Long": { platform: "YouTube Long", updatedAt: "fallback", specs: { notes: ["Stronger narrative", "Chapters optional", "Subscribe + next video CTA"] } },
+  LinkedIn: {
+    platform: "LinkedIn",
+    updatedAt: "fallback",
+    specs: { notes: ["Professional tone", "Subtitles recommended", "Avoid overly aggressive claims"] },
+  },
+  Facebook: {
+    platform: "Meta (Facebook)",
+    updatedAt: "fallback",
+    specs: { notes: ["Mobile-first", "Thumb-stopping first 2 seconds", "Clear CTA"] },
+  },
+  "Instagram Reels": {
+    platform: "Instagram Reels",
+    updatedAt: "fallback",
+    specs: { notes: ["Mobile-first 9:16", "Hook in first 1–2 seconds", "On-screen captions"] },
+  },
+  TikTok: {
+    platform: "TikTok",
+    updatedAt: "fallback",
+    specs: { notes: ["Fast hook", "Pattern interrupts", "Clear CTA"] },
+  },
+  "YouTube Shorts": {
+    platform: "YouTube Shorts",
+    updatedAt: "fallback",
+    specs: { notes: ["Hook fast", "High retention pacing", "Subscribe CTA"] },
+  },
+  "YouTube Long": {
+    platform: "YouTube Long",
+    updatedAt: "fallback",
+    specs: { notes: ["Stronger narrative", "Chapters optional", "Subscribe + next video CTA"] },
+  },
   Promo: { platform: "Promo", updatedAt: "fallback", specs: { notes: ["Benefit first", "Fast pacing", "Strong CTA"] } },
   Landing: { platform: "Landing", updatedAt: "fallback", specs: { notes: ["Clarity > hype", "Show offer early", "One CTA"] } },
   Podcast: { platform: "Podcast", updatedAt: "fallback", specs: { notes: ["Conversational", "Chapters/timestamps", "Audio clarity"] } },
@@ -386,8 +403,10 @@ async function loadGuideline(platformPrimary) {
     "youtube shorts": "youtube",
     "youtube long": "youtube",
   };
+
   const file = map[name];
   if (!file) return FALLBACK_GUIDELINES[platformPrimary] || null;
+
   try {
     const r = await fetch(`/guidelines/${file}.json`, { cache: "no-store" });
     if (!r.ok) throw new Error("no file");
@@ -398,9 +417,7 @@ async function loadGuideline(platformPrimary) {
   }
 }
 
-/* -----------------------------
-   Inventory
------------------------------- */
+/* ----------------------------- Inventory ------------------------------ */
 const INV = {
   capture: ["Phone", "Pro Camera"],
   lenses: ["Wide", "Standard", "Tele"],
@@ -428,6 +445,7 @@ function deriveInventoryFlags(inv) {
   const hasGimbal = inv.stabilization.includes("Gimbal");
   return { hasPhone, hasProCamera, hasLight, hasAudio, hasMic, hasTripod, hasGimbal };
 }
+
 function inventorySummaryText(inv, location) {
   const esc = (a) => (a && a.length ? a.join(", ") : "—");
   return `Capture: ${esc(inv.capture)} | Lenses: ${esc(inv.lenses)} | Lights: ${esc(inv.lights)} | Audio: ${esc(inv.audio)} | Stabilization: ${esc(
@@ -435,9 +453,7 @@ function inventorySummaryText(inv, location) {
   )} | Location: ${location}`;
 }
 
-/* -----------------------------
-   Scene parsing
------------------------------- */
+/* ----------------------------- Scene parsing ------------------------------ */
 function splitScenesStrict(scriptText) {
   const t = normalizeNewlines(scriptText).trim();
   if (!t) return [];
@@ -450,8 +466,9 @@ function splitScenesStrict(scriptText) {
 
   const blocks = [];
   let cur = null;
+
   for (const raw of lines) {
-    const line = raw.replace(/\t/g, "  ");
+    const line = raw.replace(/\t/g, " ");
     if (isSceneHeader(line)) {
       if (cur) blocks.push(cur);
       cur = { id: uid(), title: line.trim(), content: "" };
@@ -465,21 +482,37 @@ function splitScenesStrict(scriptText) {
   return blocks.map((b, i) => ({ ...b, order: i + 1, content: b.content.trim() }));
 }
 
-/* -----------------------------
-   Tempo map + SECTION TAGGING
------------------------------- */
+/* ----------------------------- Tempo map + SECTION TAGGING ------------------------------ */
 function splitIntoSentences(text) {
   const t = normalizeNewlines(text).trim();
   if (!t) return [];
-  return t
-    .replace(/\n+/g, "\n")
-    .split(/(?<=[.!?…])\s+|\n+/g)
-    .map((x) => x.trim())
-    .filter(Boolean);
+
+  // Split by newlines first
+  const chunks = t.split(/\n+/g).map((x) => x.trim()).filter(Boolean);
+
+  const out = [];
+  for (const chunk of chunks) {
+    // Safe sentence splitting without lookbehind
+    let buf = "";
+    for (let i = 0; i < chunk.length; i++) {
+      const ch = chunk[i];
+      buf += ch;
+      if (ch === "." || ch === "!" || ch === "?" || ch === "…") {
+        const s = buf.trim();
+        if (s) out.push(s);
+        buf = "";
+      }
+    }
+    const rest = buf.trim();
+    if (rest) out.push(rest);
+  }
+  return out;
 }
+
 function detectPace(sentence) {
   const s = sentence.toLowerCase();
   const wc = wordCount(sentence);
+
   const hasUrgency =
     s.includes("hemen") ||
     s.includes("şimdi") ||
@@ -489,14 +522,18 @@ function detectPace(sentence) {
     s.includes("bekle") ||
     s.includes("stop") ||
     s.includes("scroll");
+
   const manyShort = wc <= 7;
   const veryLong = wc >= 18;
+
   if (hasUrgency || manyShort) return "fast";
   if (veryLong) return "slow";
   return "medium";
 }
+
 function detectIntensity(sentence) {
   const lower = sentence.toLowerCase();
+
   const emph =
     sentence.includes("!") ||
     /[A-ZÇĞİÖŞÜ]{3,}/.test(sentence) ||
@@ -505,11 +542,19 @@ function detectIntensity(sentence) {
     lower.includes("şok") ||
     lower.includes("asla") ||
     lower.includes("mutlaka");
-  const soft = lower.includes("bence") || lower.includes("istersen") || lower.includes("gel");
+
+  const soft =
+    lower.includes("bence") ||
+    lower.includes("istersen") ||
+    lower.includes("gel") ||
+    lower.includes("ister misin") ||
+    lower.includes("dilersen");
+
   if (emph) return "emphatic";
   if (soft) return "soft";
   return "neutral";
 }
+
 function estimateSeconds(words, pace, tempoPreset = "balanced") {
   let wps = pace === "fast" ? 3.0 : pace === "slow" ? 1.8 : 2.3;
   if (tempoPreset === "fast_aggressive") wps *= 1.15;
@@ -530,6 +575,7 @@ function detectSectionHeader(line) {
     const n = sceneMatch[2] || "";
     return { type: "scene", label: `Scene ${n}` };
   }
+
   return null;
 }
 
@@ -539,12 +585,14 @@ function buildTempoMap(scriptText, tempoPreset) {
 
   const lines = text.split("\n");
   let currentSection = { type: "unknown", label: "—" };
+
   const out = [];
   let globalIdx = 1;
   let buffer = [];
 
   function flushBuffer() {
     if (!buffer.length) return;
+
     const chunk = buffer.join(" ").replace(/\s+/g, " ").trim();
     buffer = [];
     if (!chunk) return;
@@ -555,6 +603,7 @@ function buildTempoMap(scriptText, tempoPreset) {
       const intensity = detectIntensity(sent);
       const wc = wordCount(sent);
       const durationSec = estimateSeconds(wc, pace, tempoPreset);
+
       out.push({
         id: uid(),
         idx: globalIdx++,
@@ -572,49 +621,56 @@ function buildTempoMap(scriptText, tempoPreset) {
   for (const rawLine of lines) {
     const line = (rawLine || "").trim();
     const header = detectSectionHeader(line);
+
     if (header) {
       flushBuffer();
       currentSection = header;
+
+      // ✅ "Hook: ..." gibi aynı satırdaki metni yakala
+      const after = line.split(":").slice(1).join(":").trim();
+      if (after) buffer.push(after);
+
       continue;
     }
+
     if (!line) {
       flushBuffer();
       continue;
     }
+
     buffer.push(line);
   }
+
   flushBuffer();
   return out;
 }
 
-/* -----------------------------
-   Inventory-aware outputs
------------------------------- */
+/* ----------------------------- Inventory-aware outputs ------------------------------ */
 function buildNeedsList(inv, location) {
   const f = deriveInventoryFlags(inv);
   const needs = [];
+
   needs.push({
     id: uid(),
     category: "Light",
     have: f.hasLight ? "Yes" : "No",
-    suggestion: f.hasLight
-      ? "Key light 45° + background separation."
-      : location === "indoor"
-      ? "Use window light + bounce (white wall)."
-      : "Shoot in shade (avoid harsh sun).",
+    suggestion: f.hasLight ? "Key light 45° + background separation." : location === "indoor" ? "Use window light + bounce (white wall)." : "Shoot in shade (avoid harsh sun).",
   });
+
   needs.push({
     id: uid(),
     category: "Audio",
     have: f.hasAudio ? "Yes" : "No",
     suggestion: f.hasAudio ? "Set levels low, avoid clipping." : "No mic: bring phone closer (40–60cm), reduce echo/wind.",
   });
+
   needs.push({
     id: uid(),
     category: "Stabilization",
     have: inv.stabilization.length ? "Yes" : "No",
     suggestion: inv.stabilization.length ? "Lock framing; use cuts." : "No stabilization: brace elbows, keep takes short.",
   });
+
   return needs;
 }
 
@@ -652,10 +708,30 @@ function buildDirectorTouch(inv, preset, location) {
 
 function buildBRollBeatList(scenes, inv, preset, location) {
   const f = deriveInventoryFlags(inv);
-  const cameraTip = f.hasProCamera ? "Camera: lock WB, expose for skin." : f.hasPhone ? "Phone: 1x lens, lock exposure." : "Select capture gear.";
-  const lightTip = f.hasLight ? `Light: ${inv.lights.filter((x) => x !== "None").join(" + ")}` : location === "indoor" ? "Light: window + bounce." : "Light: shade.";
-  const stabTip = f.hasGimbal ? "Gimbal: slow moves." : inv.stabilization.includes("Tripod") ? "Tripod: lock framing." : "Handheld: elbows locked, short takes.";
-  const audioTip = f.hasMic ? "Audio: use mic, avoid clipping." : f.hasAudio ? "Audio: phone mic, close distance." : "Audio: phone closer, reduce echo/wind.";
+
+  const cameraTip = f.hasProCamera
+    ? "Camera: lock WB, expose for skin."
+    : f.hasPhone
+    ? "Phone: 1x lens, lock exposure."
+    : "Select capture gear.";
+
+  const lightTip = f.hasLight
+    ? `Light: ${inv.lights.filter((x) => x !== "None").join(" + ")}`
+    : location === "indoor"
+    ? "Light: window + bounce."
+    : "Light: shade.";
+
+  const stabTip = f.hasGimbal
+    ? "Gimbal: slow moves."
+    : inv.stabilization.includes("Tripod")
+    ? "Tripod: lock framing."
+    : "Handheld: elbows locked, short takes.";
+
+  const audioTip = f.hasMic
+    ? "Audio: use mic, avoid clipping."
+    : f.hasAudio
+    ? "Audio: phone mic, close distance."
+    : "Audio: phone closer, reduce echo/wind.";
 
   const base = [
     { type: "Cutaway", text: "Insert a close-up of the key object / detail.", sec: 1.5 },
@@ -664,7 +740,12 @@ function buildBRollBeatList(scenes, inv, preset, location) {
     { type: "Context", text: "Insert a quick establishing wide shot.", sec: 1.2 },
   ];
 
-  const density = preset.primary === "Podcast" || preset.primary === "YouTube Long" ? 2 : preset.targetDurationSec <= 20 ? 2 : 3;
+  const density =
+    preset.primary === "Podcast" || preset.primary === "YouTube Long"
+      ? 2
+      : preset.targetDurationSec <= 20
+      ? 2
+      : 3;
 
   const out = [];
   for (const sc of scenes) {
@@ -684,28 +765,37 @@ function buildBRollBeatList(scenes, inv, preset, location) {
   return out;
 }
 
-/* -----------------------------
-   Timeline + XML export
------------------------------- */
+/* ----------------------------- Timeline + XML export ------------------------------ */
 function buildTimeline(tempoMap, bRoll, targetSec) {
   const aRoll = [];
   let t = 0;
+
   for (const s of tempoMap) {
     const start = +t.toFixed(1);
     const end = +(t + s.durationSec).toFixed(1);
-    aRoll.push({ id: uid(), type: "aRoll", text: s.text, pace: s.pace, intensity: s.intensity, startSec: start, endSec: end });
+    aRoll.push({
+      id: uid(),
+      type: "aRoll",
+      text: s.text,
+      pace: s.pace,
+      intensity: s.intensity,
+      startSec: start,
+      endSec: end,
+    });
     t = end;
   }
 
   const bTrack = [];
   let bi = 0;
   const pickEvery = 2;
+
   for (let i = 0; i < aRoll.length; i++) {
     if (i % pickEvery === 0 && bRoll[bi]) {
       const seg = aRoll[i];
       const dur = bRoll[bi].durationSec;
       const start = seg.startSec;
       const end = +(start + dur).toFixed(1);
+
       bTrack.push({
         id: uid(),
         type: "bRoll",
@@ -715,11 +805,13 @@ function buildTimeline(tempoMap, bRoll, targetSec) {
         instruction: bRoll[bi].instruction,
         linkedTo: seg.id,
       });
+
       bi++;
     }
   }
 
   const total = aRoll.length ? aRoll[aRoll.length - 1].endSec : 0;
+
   return {
     tracks: { aRoll, bRoll: bTrack },
     totalDurationSec: total,
@@ -736,30 +828,49 @@ function timelineToXml(timeline) {
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;");
 
-  const a = timeline.tracks.aRoll
-    .map((x) => `  <clip type="aRoll" start="${x.startSec}" end="${x.endSec}" pace="${x.pace}" intensity="${x.intensity}">${esc(x.text)}</clip>`)
+  const a = (timeline.tracks.aRoll || [])
+    .map(
+      (x) =>
+        `<clip type="aRoll" start="${x.startSec}" end="${x.endSec}" pace="${x.pace}" intensity="${x.intensity}">${esc(
+          x.text
+        )}</clip>`
+    )
     .join("\n");
 
-  const b = timeline.tracks.bRoll
-    .map((x) => `  <clip type="bRoll" start="${x.startSec}" end="${x.endSec}" shotType="${esc(x.shotType)}">${esc(x.instruction)}</clip>`)
+  const b = (timeline.tracks.bRoll || [])
+    .map(
+      (x) =>
+        `<clip type="bRoll" start="${x.startSec}" end="${x.endSec}" shotType="${esc(x.shotType)}">${esc(
+          x.instruction
+        )}</clip>`
+    )
     .join("\n");
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <timeline total="${timeline.totalDurationSec}" target="${timeline.targetDurationSec}">
-<aRoll>
+  <aRoll>
 ${a}
-</aRoll>
-<bRoll>
+  </aRoll>
+  <bRoll>
 ${b}
-</bRoll>
+  </bRoll>
 </timeline>`;
 }
 
-/* -----------------------------
-   AI prompt builders (EN commands always)
------------------------------- */
-function buildSystemPrompt({ displayLang, platforms, preset, goal, contentType, tempoPreset, inventoryText, durationSec, guidelineSnippet }) {
+/* ----------------------------- AI prompt builders (EN commands always) ------------------------------ */
+function buildSystemPrompt({
+  displayLang,
+  platforms,
+  preset,
+  goal,
+  contentType,
+  tempoPreset,
+  inventoryText,
+  durationSec,
+  guidelineSnippet,
+}) {
   const guidelineNotes = guidelineSnippet?.specs?.notes ? guidelineSnippet.specs.notes.join(" | ") : "";
+
   return `You are an expert video scriptwriter and editor.
 
 You MUST follow these rules:
@@ -778,22 +889,12 @@ Official-ish guideline snippet (use as constraints, do not invent new specs):
 - Notes: ${guidelineNotes || "(none)"}
 
 Output format STRICT:
-Hook:
-<text>
-
-Scene 1:
-<text>
-
-Transition:
-<text>
-
-Scene 2:
-<text>
-
+Hook: <text>
+Scene 1: <text>
+Transition: <text>
+Scene 2: <text>
 ... (as needed)
-
-CTA:
-<text>
+CTA: <text>
 
 Important:
 - Keep it shootable with the given inventory. If lights/mic are missing, adapt.
@@ -803,9 +904,7 @@ Important:
 }
 
 function buildDraftUserMessage({ brief }) {
-  return `BRIEF:
-${brief || "(empty)"}
-
+  return `BRIEF: ${brief || "(empty)"}
 Generate a complete script now.`;
 }
 
@@ -828,9 +927,7 @@ Hard rules:
 - Return the entire response in the output language.`;
 }
 
-/* -----------------------------
-   UI components
------------------------------- */
+/* ----------------------------- UI components ------------------------------ */
 function Chip({ active, onClick, children }) {
   return (
     <button className={"chip " + (active ? "chip-on" : "")} onClick={onClick} type="button" aria-pressed={active}>
@@ -853,9 +950,7 @@ function SectionTitle({ icon, title, right }) {
   );
 }
 
-/* -----------------------------
-   Teleprompter (TimeMap-driven)
------------------------------- */
+/* ----------------------------- Teleprompter (TimeMap-driven) ------------------------------ */
 function prefersReducedMotion() {
   return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
@@ -868,11 +963,9 @@ function formatMs(ms) {
 function clamp01(x) {
   return Math.max(0, Math.min(1, x));
 }
-
 function deriveEmotionFromTempoRow(row, preset) {
   const intensity = row?.intensity || "neutral";
   const pace = row?.pace || "medium";
-
   let name = "Neutral";
   let base = 0.55;
 
@@ -889,7 +982,6 @@ function deriveEmotionFromTempoRow(row, preset) {
 
   if (pace === "fast") base += 0.08;
   if (pace === "slow") base -= 0.1;
-
   if (preset?.pacing === "fast_aggressive") base += 0.06;
   if (preset?.pacing === "calm_cinematic") base -= 0.06;
 
@@ -906,22 +998,18 @@ function deriveDirectorCues(row, tpKey, preset) {
     if (pace === "fast") cues.push("Hızlı gir", "Nefesi kısa tut");
     if (pace === "slow") cues.push("Yavaşlat", "Net artikülasyon");
     if (pace === "medium") cues.push("Dengeli tempo");
-
     if (intensity === "emphatic") cues.push("Vurguyu artır", "Göz teması", "Ana kelimede dur");
     if (intensity === "soft") cues.push("Daha samimi ton", "Yumuşak bitir");
     if (intensity === "neutral") cues.push("Temiz & anlaşılır");
-
     if (preset?.primary === "YouTube Long") cues.push("Daha hikaye anlatır gibi");
     if (preset?.primary === "TikTok" || preset?.primary === "Instagram Reels") cues.push("Pattern interrupt hissi");
   } else {
     if (pace === "fast") cues.push("Punchy entry", "Short breaths");
     if (pace === "slow") cues.push("Slow down", "Clear articulation");
     if (pace === "medium") cues.push("Balanced pace");
-
     if (intensity === "emphatic") cues.push("Increase emphasis", "Eye contact", "Pause on keywords");
     if (intensity === "soft") cues.push("Warmer tone", "Soft landing");
     if (intensity === "neutral") cues.push("Clean & clear");
-
     if (preset?.primary === "YouTube Long") cues.push("More narrative delivery");
     if (preset?.primary === "TikTok" || preset?.primary === "Instagram Reels") cues.push("Pattern interrupt feel");
   }
@@ -954,6 +1042,7 @@ function buildTeleprompterTimeMap(tempoMap, preset, tpKey) {
     const cues = deriveDirectorCues(row, tpKey, preset);
     const sectionType = row.sectionType || "unknown";
     const sectionLabel = row.sectionLabel || "—";
+
     return {
       id: row.id,
       label: `#${row.idx}`,
@@ -986,7 +1075,6 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
 
   const currentBeat = beats[beatIndex] || null;
   const totalBeats = beats.length;
-
   const durationMs = currentBeat?.durationMs ?? 0;
   const remainingMs = Math.max(0, durationMs - elapsedMs);
   const progress = durationMs > 0 ? clamp01(elapsedMs / durationMs) : 0;
@@ -1063,6 +1151,7 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
         });
         return;
       }
+
       rafRef.current = requestAnimationFrame(tick);
     };
 
@@ -1218,7 +1307,16 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
     <div style={rootStyle}>
       <div style={panelStyle}>
         <div style={rowStyle}>
-          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", minWidth: 320, flex: "1 1 560px" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 10,
+              alignItems: "center",
+              flexWrap: "wrap",
+              minWidth: 320,
+              flex: "1 1 560px",
+            }}
+          >
             <span style={pill}>
               {tpT.teleprompter} · {preset?.primary || "—"} · {preset?.aspect || "—"}
             </span>
@@ -1234,7 +1332,8 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
             </span>
 
             <span style={pill}>
-              {tpT.emotion}: <b style={{ fontWeight: 950 }}>{emotionName}</b> · {tpT.intensity}: <b style={{ fontWeight: 950 }}>%{emotionIntensity}</b>
+              {tpT.emotion}: <b style={{ fontWeight: 950 }}>{emotionName}</b> · {tpT.intensity}:{" "}
+              <b style={{ fontWeight: 950 }}>%{emotionIntensity}</b>
             </span>
 
             {showCues && (
@@ -1249,7 +1348,10 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
                   lineHeight: 1.25,
                 }}
               >
-                🎬 {Array.isArray(currentBeat?.cues) && currentBeat.cues.length ? currentBeat.cues.join(" · ") : tpT.noCues}
+                🎬{" "}
+                {Array.isArray(currentBeat?.cues) && currentBeat.cues.length
+                  ? currentBeat.cues.join(" · ")
+                  : tpT.noCues}
               </span>
             )}
           </div>
@@ -1264,7 +1366,6 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
             <button style={btn} onClick={nextBeat} title="→">
               {tpT.next}
             </button>
-
             <button style={btn} onClick={() => setMirror((v) => !v)} title="M">
               {tpT.mirror}: {mirror ? "On" : "Off"}
             </button>
@@ -1274,18 +1375,15 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
             <button style={btn} onClick={() => setHighContrast((v) => !v)} title="C">
               {tpT.contrast}: {highContrast ? "High" : "Normal"}
             </button>
-
             <button style={btn} onClick={copyCurrentText}>
               Copy
             </button>
-
             <button style={btn} onClick={requestFullscreen}>
               {tpT.fullscreen}
             </button>
             <button style={btn} onClick={exitFullscreen}>
               {tpT.exitFs}
             </button>
-
             <button
               style={{ ...btn, borderColor: "rgba(255,255,255,0.22)" }}
               onClick={() => {
@@ -1321,26 +1419,21 @@ function TeleprompterOverlay({ tpT, tpKey, preset, timeMap, onClose }) {
           <span style={{ color: sectionColor, fontWeight: 900 }}>{sectionLabel}</span> · Pace: {currentBeat?.pace || "—"} · Tag:{" "}
           {currentBeat?.intensityTag || "—"}
         </div>
-
         <div style={{ fontWeight: 900, color: flowTextColor || "inherit" }}>{currentBeat?.text || ""}</div>
       </div>
     </div>
   );
 }
 
-/* -----------------------------
-   Auth modal (Password login + Signup profile fields)
------------------------------- */
+/* ----------------------------- Auth modal (Password login + Signup profile fields) ------------------------------ */
 function AuthModal({ t, open, onClose, onSignedIn }) {
   const [tab, setTab] = useState("signin"); // signin | signup | reset
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [gender, setGender] = useState("prefer_not");
   const [birthYear, setBirthYear] = useState("");
-
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
 
@@ -1381,11 +1474,7 @@ function AuthModal({ t, open, onClose, onSignedIn }) {
     gap: 12,
   };
 
-  const bodyStyle = {
-    padding: 16,
-    display: "grid",
-    gap: 12,
-  };
+  const bodyStyle = { padding: 16, display: "grid", gap: 12 };
 
   const inputStyle = {
     width: "100%",
@@ -1509,21 +1598,41 @@ function AuthModal({ t, open, onClose, onSignedIn }) {
       <div style={cardStyle} onMouseDown={(e) => e.stopPropagation()}>
         <div style={headerStyle}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ width: 36, height: 36, borderRadius: 12, display: "grid", placeItems: "center", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)" }}>
+            <span
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 12,
+                display: "grid",
+                placeItems: "center",
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.10)",
+              }}
+            >
               <KeyRound size={18} />
             </span>
+
             <div style={{ display: "grid" }}>
               <div style={{ fontWeight: 950 }}>{t.authTitle}</div>
               <div style={{ fontSize: 12, opacity: 0.8 }}>Email + Password · Confirm required</div>
             </div>
           </div>
-          <button style={btn} onClick={onClose}>✕</button>
+
+          <button style={btn} onClick={onClose}>
+            ✕
+          </button>
         </div>
 
         <div style={{ padding: 14, display: "flex", gap: 10, flexWrap: "wrap", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-          <button style={tabBtn(tab === "signin")} onClick={() => setTab("signin")}><LogIn size={16} /> {t.signIn}</button>
-          <button style={tabBtn(tab === "signup")} onClick={() => setTab("signup")}><UserPlus size={16} /> {t.signUp}</button>
-          <button style={tabBtn(tab === "reset")} onClick={() => setTab("reset")}><KeyRound size={16} /> {t.resetPw}</button>
+          <button style={tabBtn(tab === "signin")} onClick={() => setTab("signin")}>
+            <LogIn size={16} /> {t.signIn}
+          </button>
+          <button style={tabBtn(tab === "signup")} onClick={() => setTab("signup")}>
+            <UserPlus size={16} /> {t.signUp}
+          </button>
+          <button style={tabBtn(tab === "reset")} onClick={() => setTab("reset")}>
+            <KeyRound size={16} /> {t.resetPw}
+          </button>
         </div>
 
         <div style={bodyStyle}>
@@ -1535,7 +1644,13 @@ function AuthModal({ t, open, onClose, onSignedIn }) {
           {(tab === "signin" || tab === "signup") && (
             <div style={{ display: "grid", gap: 8 }}>
               <label style={{ fontSize: 12, opacity: 0.85, fontWeight: 900 }}>{t.password}</label>
-              <input style={inputStyle} value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="••••••••" />
+              <input
+                style={inputStyle}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="••••••••"
+              />
             </div>
           )}
 
@@ -1561,6 +1676,7 @@ function AuthModal({ t, open, onClose, onSignedIn }) {
                     <option value="female">{t.genderFemale}</option>
                   </select>
                 </div>
+
                 <div style={{ display: "grid", gap: 8 }}>
                   <label style={{ fontSize: 12, opacity: 0.85, fontWeight: 900 }}>{t.birthYear}</label>
                   <input style={inputStyle} value={birthYear} onChange={(e) => setBirthYear(e.target.value)} placeholder="e.g. 1981" />
@@ -1574,16 +1690,41 @@ function AuthModal({ t, open, onClose, onSignedIn }) {
           )}
 
           {msg && (
-            <div style={{ padding: "10px 12px", borderRadius: 14, border: "1px solid rgba(255,255,255,0.10)", background: "rgba(255,255,255,0.05)", fontWeight: 800 }}>
+            <div
+              style={{
+                padding: "10px 12px",
+                borderRadius: 14,
+                border: "1px solid rgba(255,255,255,0.10)",
+                background: "rgba(255,255,255,0.05)",
+                fontWeight: 800,
+              }}
+            >
               {msg}
             </div>
           )}
 
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", flexWrap: "wrap" }}>
-            <button style={btn} onClick={onClose} disabled={busy}>Cancel</button>
-            {tab === "signin" && <button style={btnPrimary} onClick={handleSignIn} disabled={busy}>{busy ? "..." : t.signIn}</button>}
-            {tab === "signup" && <button style={btnPrimary} onClick={handleSignUp} disabled={busy}>{busy ? "..." : t.createAccount}</button>}
-            {tab === "reset" && <button style={btnPrimary} onClick={handleReset} disabled={busy}>{busy ? "..." : t.sendReset}</button>}
+            <button style={btn} onClick={onClose} disabled={busy}>
+              Cancel
+            </button>
+
+            {tab === "signin" && (
+              <button style={btnPrimary} onClick={handleSignIn} disabled={busy}>
+                {busy ? "..." : t.signIn}
+              </button>
+            )}
+
+            {tab === "signup" && (
+              <button style={btnPrimary} onClick={handleSignUp} disabled={busy}>
+                {busy ? "..." : t.createAccount}
+              </button>
+            )}
+
+            {tab === "reset" && (
+              <button style={btnPrimary} onClick={handleReset} disabled={busy}>
+                {busy ? "..." : t.sendReset}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -1591,21 +1732,23 @@ function AuthModal({ t, open, onClose, onSignedIn }) {
   );
 }
 
-/* -----------------------------
-   Router Top Nav (premium)
------------------------------- */
+/* ----------------------------- Router Top Nav (premium) ------------------------------ */
 function TopNav({ t, authUser, profile, onOpenAuth, onLogout }) {
   const loc = useLocation();
   const isActive = (path) => (loc.pathname === path ? "nav-on" : "");
-
   const credits = Number(profile?.credits ?? 0);
   const paid = !!profile?.is_paid;
 
   return (
     <div className="topnav">
       <div className="topnav-left">
-        <Link className={"navlink " + isActive("/")} to="/">{t.app}</Link>
-        <Link className={"navlink " + isActive("/account")} to="/account">{t.account}</Link>
+        <Link className={"navlink " + isActive("/")} to="/">
+          {t.app}
+        </Link>
+        <Link className={"navlink " + isActive("/account")} to="/account">
+          {t.account}
+        </Link>
+
         <span className="navmeta">
           <span className="dot" />
           {authUser ? (
@@ -1617,20 +1760,23 @@ function TopNav({ t, authUser, profile, onOpenAuth, onLogout }) {
           )}
         </span>
       </div>
+
       <div className="topnav-right">
         {authUser ? (
-          <button className="btn" onClick={onLogout}><LogOut size={16} /> {t.logout}</button>
+          <button className="btn" onClick={onLogout}>
+            <LogOut size={16} /> {t.logout}
+          </button>
         ) : (
-          <button className="btn" onClick={onOpenAuth}><LogIn size={16} /> {t.login}</button>
+          <button className="btn" onClick={onOpenAuth}>
+            <LogIn size={16} /> {t.login}
+          </button>
         )}
       </div>
     </div>
   );
 }
 
-/* -----------------------------
-   Premium Account Dashboard
------------------------------- */
+/* ----------------------------- Premium Account Dashboard ------------------------------ */
 function AccountPage({ t, authUser, profile, refreshProfile }) {
   const paid = !!profile?.is_paid;
   const credits = profile?.credits ?? 0;
@@ -1653,7 +1799,8 @@ function AccountPage({ t, authUser, profile, refreshProfile }) {
     padding: "6px 10px",
     borderRadius: 999,
     border: "1px solid rgba(255,255,255,0.10)",
-    background: tone === "good" ? "rgba(81,207,102,0.14)" : tone === "warn" ? "rgba(255,193,7,0.12)" : "rgba(255,255,255,0.05)",
+    background:
+      tone === "good" ? "rgba(81,207,102,0.14)" : tone === "warn" ? "rgba(255,193,7,0.12)" : "rgba(255,255,255,0.05)",
     color: "rgba(255,255,255,0.92)",
     fontWeight: 900,
     fontSize: 12,
@@ -1669,10 +1816,17 @@ function AccountPage({ t, authUser, profile, refreshProfile }) {
             <div style={{ fontWeight: 950, fontSize: 18 }}>{t.account}</div>
             <div style={small}>Premium dashboard · Credits & plan</div>
           </div>
+
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-            <span style={pill(paid ? "good" : "warn")}>Plan: <b style={{ fontWeight: 950 }}>{plan}</b></span>
-            <span style={pill(paid ? "good" : "warn")}>Paid: <b style={{ fontWeight: 950 }}>{paid ? "Yes" : "No"}</b></span>
-            <button className="btn btn-ghost" onClick={refreshProfile}>Refresh</button>
+            <span style={pill(paid ? "good" : "warn")}>
+              Plan: <b style={{ fontWeight: 950 }}>{plan}</b>
+            </span>
+            <span style={pill(paid ? "good" : "warn")}>
+              Paid: <b style={{ fontWeight: 950 }}>{paid ? "Yes" : "No"}</b>
+            </span>
+            <button className="btn btn-ghost" onClick={refreshProfile}>
+              Refresh
+            </button>
           </div>
         </div>
 
@@ -1686,12 +1840,16 @@ function AccountPage({ t, authUser, profile, refreshProfile }) {
                   <div style={small}>Credits</div>
                   <div style={bigNum}>{credits}</div>
                 </div>
+
                 <div style={{ minWidth: 240 }}>
                   <div style={small}>Email</div>
                   <div style={{ fontWeight: 900, marginTop: 8 }}>{authUser.email}</div>
-                  <div style={{ marginTop: 6, ...small, maxWidth: 520, overflow: "hidden", textOverflow: "ellipsis" }}>User ID: {authUser.id}</div>
+                  <div style={{ marginTop: 6, ...small, maxWidth: 520, overflow: "hidden", textOverflow: "ellipsis" }}>
+                    User ID: {authUser.id}
+                  </div>
                 </div>
               </div>
+
               <div style={{ marginTop: 14, display: "grid", gap: 8 }}>
                 <div style={{ ...small }}>
                   Note: Secure credit enforcement should be finalized server-side (atomic decrement via DB RPC). Current UI displays live values from profile.
@@ -1717,9 +1875,7 @@ function AccountPage({ t, authUser, profile, refreshProfile }) {
   );
 }
 
-/* -----------------------------
-   Main App (editor)
------------------------------- */
+/* ----------------------------- Main App (editor) ------------------------------ */
 function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
   const [state, setState] = useState(() => ({
     platforms: ["LinkedIn"],
@@ -1742,7 +1898,7 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
     script: "",
   }));
 
-  // ✅ TP language now derived from outputLanguage (not hard-coded in root)
+  // ✅ TP language derived from outputLanguage (not hard-coded)
   const tpKey = useMemo(() => tpLocaleFromOutput(state.outputLanguage), [state.outputLanguage]);
   const tpT = UI_LOCALES[tpKey];
 
@@ -1757,8 +1913,8 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
   const [teleprompterOpen, setTeleprompterOpen] = useState(false);
 
   const [serverHealth, setServerHealth] = useState(null);
-
   const [guideline, setGuideline] = useState(null);
+
   const [scenes, setScenes] = useState([]);
   const [tempoMap, setTempoMap] = useState([]);
   const [needsList, setNeedsList] = useState([]);
@@ -1767,6 +1923,7 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
   const [timeline, setTimeline] = useState(null);
 
   const [reviseNote, setReviseNote] = useState("");
+
   const [isGenerating, setIsGenerating] = useState(false);
   const [isRevising, setIsRevising] = useState(false);
 
@@ -1774,12 +1931,11 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
 
   const displayLang = state.outputLanguage || state.uiLanguage;
 
-  const preset = useMemo(() => derivePreset(state.platforms, state.durationSec, state.tempoPreset, state.aspectRatio), [
-    state.platforms,
-    state.durationSec,
-    state.tempoPreset,
-    state.aspectRatio,
-  ]);
+  const preset = useMemo(
+    () => derivePreset(state.platforms, state.durationSec, state.tempoPreset, state.aspectRatio),
+    [state.platforms, state.durationSec, state.tempoPreset, state.aspectRatio]
+  );
+
   const invText = useMemo(() => inventorySummaryText(state.inventory, "indoor"), [state.inventory]);
 
   const kpis = useMemo(() => {
@@ -1799,6 +1955,7 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
     if (!raw) return;
     const data = safeJsonParse(raw);
     if (!data) return;
+
     if (data.state) setState(data.state);
     if (data.provider) setProvider(data.provider);
     if (data.model) setModel(data.model);
@@ -1807,17 +1964,8 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
   }, []);
 
   useEffect(() => {
-    // ✅ removed buggy no-op that created garbage key
-    localStorage.setItem(
-      LS_KEY,
-      JSON.stringify({
-        state,
-        provider,
-        model,
-        temperature,
-        sidebarOpen,
-      })
-    );
+    // ✅ snapshot store
+    localStorage.setItem(LS_KEY, JSON.stringify({ state, provider, model, temperature, sidebarOpen }));
   }, [state, provider, model, temperature, sidebarOpen]);
 
   useEffect(() => {
@@ -1849,6 +1997,7 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
       setTimeline(null);
       return;
     }
+
     const sc = splitScenesStrict(state.script);
     const tm = buildTempoMap(state.script, state.tempoPreset);
     const needs = buildNeedsList(state.inventory, "indoor");
@@ -1869,6 +2018,7 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
   function resetAll() {
     if (!confirm(t.resetConfirm)) return;
     localStorage.removeItem(LS_KEY);
+
     setState({
       platforms: ["LinkedIn"],
       uiLanguage: "Turkish",
@@ -1889,6 +2039,7 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
       brief: "",
       script: "",
     });
+
     setProvider("openai");
     setModel("gpt-4o-mini");
     setTemperature(0.7);
@@ -1917,10 +2068,12 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
     const text = await file.text();
     const data = safeJsonParse(text);
     if (!data) return;
+
     if (data.state) setState(data.state);
     if (data.ai?.provider) setProvider(data.ai.provider);
     if (data.ai?.model) setModel(data.ai.model);
     if (typeof data.ai?.temperature === "number") setTemperature(data.ai.temperature);
+
     showToast(t.imported);
   }
 
@@ -1934,7 +2087,7 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
     const hasScript = state.script.trim();
     if (mode === "revise" && !hasScript) {
       showToast(t.noScript);
-      return;
+      return "";
     }
 
     const system = buildSystemPrompt({
@@ -1977,9 +2130,7 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
     });
 
     const data = await r.json();
-    if (!r.ok || !data?.ok) {
-      throw new Error(data?.error || "Generate failed");
-    }
+    if (!r.ok || !data?.ok) throw new Error(data?.error || "Generate failed");
     return (data.text || "").trim();
   }
 
@@ -2008,7 +2159,7 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
       showToast(t.generated);
       refreshProfile?.();
     } catch (e) {
-      showToast(String(e.message || e));
+      showToast(String(e?.message || e));
     } finally {
       setIsGenerating(false);
     }
@@ -2020,6 +2171,7 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
       showToast(t.noScript);
       return;
     }
+
     setIsRevising(true);
     try {
       const text = await callGenerate({ mode: "revise" });
@@ -2027,7 +2179,7 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
       showToast(t.revised);
       refreshProfile?.();
     } catch (e) {
-      showToast(String(e.message || e));
+      showToast(String(e?.message || e));
     } finally {
       setIsRevising(false);
     }
@@ -2044,8 +2196,7 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
       <div className="topbar">
         <div className="brand">
           <span className="brand-badge">
-            <Sparkles size={18} />
-            {t.appTitle}
+            <Sparkles size={18} /> {t.appTitle}
           </span>
           <span className="subtle">{t.subtitle}</span>
         </div>
@@ -2056,12 +2207,13 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
           </button>
 
           <button className="btn" onClick={() => setSidebarOpen((v) => !v)}>
-            {sidebarOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
-            {sidebarOpen ? t.hide : t.show}
+            {sidebarOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />} {sidebarOpen ? t.hide : t.show}
           </button>
+
           <button className="btn btn-ghost" onClick={() => showToast(t.snapshot)}>
             <Save size={16} /> {t.snapshot}
           </button>
+
           <button className="btn btn-danger" onClick={resetAll}>
             <Trash2 size={16} /> {t.reset}
           </button>
@@ -2069,22 +2221,34 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
       </div>
 
       <div className="editor-grid">
+        {/* LEFT PANEL */}
         <div className="panel">
           <div className="step-indicator">
             <div className="info-tag">{t.outputRule}</div>
+
             <div className="row" style={{ justifyContent: "space-between" }}>
               <div className="row">
-                <Badge tone="blue"><BookOpen size={14} /> {preset.primary}</Badge>
-                <Badge><Gauge size={14} /> {state.tone}</Badge>
+                <Badge tone="blue">
+                  <BookOpen size={14} /> {preset.primary}
+                </Badge>
+                <Badge>
+                  <Gauge size={14} /> {state.tone}
+                </Badge>
                 <Badge>{state.contentType}</Badge>
-                <Badge>{state.uiLanguage} → {displayLang}</Badge>
+                <Badge>
+                  {state.uiLanguage} → {displayLang}
+                </Badge>
                 <Badge>{state.aspectRatio}</Badge>
               </div>
             </div>
 
             <div className="row" style={{ marginTop: 10 }}>
-              <Badge><ShieldCheck size={14} /> {t.keysServerOnly}</Badge>
-              <Badge><Server size={14} /> {serverHealth?.ok ? t.serverOk : t.serverOff}</Badge>
+              <Badge>
+                <ShieldCheck size={14} /> {t.keysServerOnly}
+              </Badge>
+              <Badge>
+                <Server size={14} /> {serverHealth?.ok ? t.serverOk : t.serverOff}
+              </Badge>
               <Badge>
                 OpenAI: {serverHealth?.providers?.openai ? "✅" : "—"} • Anthropic: {serverHealth?.providers?.anthropic ? "✅" : "—"} • Gemini:{" "}
                 {serverHealth?.providers?.gemini ? "✅" : "—"}
@@ -2094,12 +2258,25 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
 
           <div className="card" style={{ marginBottom: 12 }}>
             <SectionTitle icon={<Settings size={18} />} title="Core" right={<Badge tone="blue">{t.presets}</Badge>} />
+
             <div className="row">
               <div className="field" style={{ minWidth: 360 }}>
-                <label>{t.platform} — <span className="small">{t.platformSelectHelp}</span></label>
+                <label>
+                  {t.platform} — <span className="small">{t.platformSelectHelp}</span>
+                </label>
+
                 <div className="row" style={{ gap: 8 }}>
                   {PLATFORM_OPTIONS.map((p) => (
-                    <Chip key={p} active={state.platforms.includes(p)} onClick={() => setState((s) => ({ ...s, platforms: s.platforms.includes(p) ? s.platforms.filter((x) => x !== p) : [...s.platforms, p] }))}>
+                    <Chip
+                      key={p}
+                      active={state.platforms.includes(p)}
+                      onClick={() =>
+                        setState((s) => ({
+                          ...s,
+                          platforms: s.platforms.includes(p) ? s.platforms.filter((x) => x !== p) : [...s.platforms, p],
+                        }))
+                      }
+                    >
                       {p}
                     </Chip>
                   ))}
@@ -2109,27 +2286,47 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
               <div className="field">
                 <label>{t.aspectRatio}</label>
                 <select value={state.aspectRatio} onChange={(e) => setState((s) => ({ ...s, aspectRatio: e.target.value }))}>
-                  {ASPECT_OPTIONS.map((a) => (<option key={a} value={a}>{a}</option>))}
+                  {ASPECT_OPTIONS.map((a) => (
+                    <option key={a} value={a}>
+                      {a}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               <div className="field">
                 <label>{t.goal}</label>
                 <select value={state.goal} onChange={(e) => setState((s) => ({ ...s, goal: e.target.value }))}>
-                  <option>Sales</option><option>Leads</option><option>Traffic</option><option>Brand</option><option>Education</option><option>Authority</option>
+                  <option>Sales</option>
+                  <option>Leads</option>
+                  <option>Traffic</option>
+                  <option>Brand</option>
+                  <option>Education</option>
+                  <option>Authority</option>
                 </select>
               </div>
 
               <div className="field">
                 <label>{t.contentType}</label>
                 <select value={state.contentType} onChange={(e) => setState((s) => ({ ...s, contentType: e.target.value }))}>
-                  <option>Product Review</option><option>Education / Tutorial</option><option>Unboxing</option><option>Promo Video</option><option>Landing Video</option><option>Podcast Clip</option><option>Storytime</option>
+                  <option>Product Review</option>
+                  <option>Education / Tutorial</option>
+                  <option>Unboxing</option>
+                  <option>Promo Video</option>
+                  <option>Landing Video</option>
+                  <option>Podcast Clip</option>
+                  <option>Storytime</option>
                 </select>
               </div>
 
               <div className="field">
                 <label>{t.duration} (sec)</label>
-                <input type="text" value={state.durationSec} onChange={(e) => setState((s) => ({ ...s, durationSec: clamp(Number(e.target.value) || 0, 5, 7200) }))} placeholder="e.g. 45" />
+                <input
+                  type="text"
+                  value={state.durationSec}
+                  onChange={(e) => setState((s) => ({ ...s, durationSec: clamp(Number(e.target.value) || 0, 5, 7200) }))}
+                  placeholder="e.g. 45"
+                />
                 <div className="small">{preset.structureHint}</div>
               </div>
 
@@ -2144,15 +2341,34 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
 
               <div className="field">
                 <label>{t.inputLang}</label>
-                <select value={state.uiLanguage} onChange={(e) => { const v = e.target.value; setState((s) => ({ ...s, uiLanguage: v })); onUILanguageChange?.(v); }}>
-                  <option>Turkish</option><option>English</option><option>German</option><option>French</option><option>Spanish</option><option>Italian</option><option>Arabic</option>
+                <select
+                  value={state.uiLanguage}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setState((s) => ({ ...s, uiLanguage: v }));
+                    onUILanguageChange?.(v);
+                  }}
+                >
+                  <option>Turkish</option>
+                  <option>English</option>
+                  <option>German</option>
+                  <option>French</option>
+                  <option>Spanish</option>
+                  <option>Italian</option>
+                  <option>Arabic</option>
                 </select>
               </div>
 
               <div className="field">
                 <label>{t.outputLang}</label>
                 <select value={state.outputLanguage} onChange={(e) => setState((s) => ({ ...s, outputLanguage: e.target.value }))}>
-                  <option>Turkish</option><option>English</option><option>German</option><option>French</option><option>Spanish</option><option>Italian</option><option>Arabic</option>
+                  <option>Turkish</option>
+                  <option>English</option>
+                  <option>German</option>
+                  <option>French</option>
+                  <option>Spanish</option>
+                  <option>Italian</option>
+                  <option>Arabic</option>
                 </select>
               </div>
             </div>
@@ -2162,7 +2378,13 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
             <div className="row">
               <div className="field" style={{ minWidth: 520, width: "100%" }}>
                 <label>Brief</label>
-                <textarea rows={5} value={state.brief} onChange={(e) => setState((s) => ({ ...s, brief: e.target.value }))} placeholder="1-2 sentences: what is this video about?" style={{ minHeight: "unset", resize: "vertical" }} />
+                <textarea
+                  rows={5}
+                  value={state.brief}
+                  onChange={(e) => setState((s) => ({ ...s, brief: e.target.value }))}
+                  placeholder="1-2 sentences: what is this video about?"
+                  style={{ minHeight: "unset", resize: "vertical" }}
+                />
               </div>
 
               <div className="field" style={{ minWidth: 420, flex: 1 }}>
@@ -2173,15 +2395,14 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
           </div>
 
           <div className="card" style={{ marginBottom: 12 }}>
-            <SectionTitle
-              icon={<Camera size={18} />}
-              title={t.inventory}
-              right={<Badge tone="blue">{invText}</Badge>}
-            />
+            <SectionTitle icon={<Camera size={18} />} title={t.inventory} right={<Badge tone="blue">{invText}</Badge>} />
+
             <div className="inv-grid">
               {/* Capture */}
               <div className="inv-col">
-                <div className="inv-title"><Camera size={16} /> Capture</div>
+                <div className="inv-title">
+                  <Camera size={16} /> Capture
+                </div>
                 {INV.capture.map((v) => (
                   <div key={v} className="inv-row">
                     <input
@@ -2201,7 +2422,9 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
 
               {/* Lenses */}
               <div className="inv-col">
-                <div className="inv-title"><Aperture size={16} /> Lenses</div>
+                <div className="inv-title">
+                  <Aperture size={16} /> Lenses
+                </div>
                 {INV.lenses.map((v) => (
                   <div key={v} className="inv-row">
                     <input
@@ -2221,7 +2444,9 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
 
               {/* Lights (None rule) */}
               <div className="inv-col">
-                <div className="inv-title"><Lightbulb size={16} /> Lights</div>
+                <div className="inv-title">
+                  <Lightbulb size={16} /> Lights
+                </div>
                 {INV.lights.map((v) => (
                   <div key={v} className="inv-row">
                     <input
@@ -2241,7 +2466,9 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
 
               {/* Audio (None rule) */}
               <div className="inv-col">
-                <div className="inv-title"><Mic size={16} /> Audio</div>
+                <div className="inv-title">
+                  <Mic size={16} /> Audio
+                </div>
                 {INV.audio.map((v) => (
                   <div key={v} className="inv-row">
                     <input
@@ -2261,7 +2488,9 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
 
               {/* Stabilization */}
               <div className="inv-col">
-                <div className="inv-title"><Smartphone size={16} /> Stabilization</div>
+                <div className="inv-title">
+                  <Smartphone size={16} /> Stabilization
+                </div>
                 {INV.stabilization.map((v) => (
                   <div key={v} className="inv-row">
                     <input
@@ -2286,25 +2515,77 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
           </div>
 
           <div className="row" style={{ justifyContent: "space-between", margin: "10px 0 12px" }}>
-            <button className="btn btn-green" onClick={generateDraft} disabled={isGenerating || isRevising}><Server size={16} /> {isGenerating ? "..." : t.generate}</button>
-            <button className="btn btn-green" onClick={reviseScript} disabled={isGenerating || isRevising || !state.script.trim()}><RefreshCcw size={16} /> {isRevising ? "..." : t.revise}</button>
+            <button className="btn btn-green" onClick={generateDraft} disabled={isGenerating || isRevising}>
+              <Server size={16} /> {isGenerating ? "..." : t.generate}
+            </button>
+
+            <button className="btn btn-green" onClick={reviseScript} disabled={isGenerating || isRevising || !state.script.trim()}>
+              <RefreshCcw size={16} /> {isRevising ? "..." : t.revise}
+            </button>
 
             <div className="row">
-              <button className="btn" onClick={copyProjectJson} disabled={!state.script.trim()}><ClipboardCopy size={16} /> Copy JSON</button>
-              <button className="btn" onClick={() => fileInputRef.current?.click()}><Upload size={16} /> {t.importJson}</button>
-              <input ref={fileInputRef} type="file" accept=".json,application/json" style={{ display: "none" }} onChange={async (e) => { const f = e.target.files?.[0]; if (f) await importProjectJson(f); e.target.value = ""; }} />
-              <button className="btn btn-green" onClick={exportProjectJson}><FileJson size={16} /> {t.exportJson}</button>
-              <button className="btn" onClick={exportTimelineXml} disabled={!timeline}><FileCode2 size={16} /> {t.exportXml}</button>
+              <button className="btn" onClick={copyProjectJson} disabled={!state.script.trim()}>
+                <ClipboardCopy size={16} /> Copy JSON
+              </button>
+
+              <button className="btn" onClick={() => fileInputRef.current?.click()}>
+                <Upload size={16} /> {t.importJson}
+              </button>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json,application/json"
+                style={{ display: "none" }}
+                onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (f) await importProjectJson(f);
+                  e.target.value = "";
+                }}
+              />
+
+              <button className="btn btn-green" onClick={exportProjectJson}>
+                <FileJson size={16} /> {t.exportJson}
+              </button>
+
+              <button className="btn" onClick={exportTimelineXml} disabled={!timeline}>
+                <FileCode2 size={16} /> {t.exportXml}
+              </button>
             </div>
           </div>
 
           <div className="card" style={{ marginBottom: 12 }}>
-            <SectionTitle icon={<BookOpen size={18} />} title={t.script} right={<div className="row"><Badge>Words: {kpis.wc}</Badge><Badge>Sentences: {kpis.sentences}</Badge></div>} />
-            <textarea value={state.script} onChange={(e) => setState((s) => ({ ...s, script: e.target.value }))} placeholder="Hook / Scene 1 / Transition / Scene 2 / CTA ..." />
+            <SectionTitle
+              icon={<BookOpen size={18} />}
+              title={t.script}
+              right={
+                <div className="row">
+                  <Badge>Words: {kpis.wc}</Badge>
+                  <Badge>Sentences: {kpis.sentences}</Badge>
+                </div>
+              }
+            />
+            <textarea
+              value={state.script}
+              onChange={(e) => setState((s) => ({ ...s, script: e.target.value }))}
+              placeholder="Hook / Scene 1 / Transition / Scene 2 / CTA ..."
+            />
           </div>
 
           <div className="card">
-            <SectionTitle icon={<Film size={18} />} title={t.timeMap} right={<div className="row"><Badge tone="blue">{t.timeMapFix}</Badge><button className="btn btn-ghost" onClick={() => setTimeMapShowAll((v) => !v)}>{timeMapShowAll ? "Show less" : "Show all"}</button></div>} />
+            <SectionTitle
+              icon={<Film size={18} />}
+              title={t.timeMap}
+              right={
+                <div className="row">
+                  <Badge tone="blue">{t.timeMapFix}</Badge>
+                  <button className="btn btn-ghost" onClick={() => setTimeMapShowAll((v) => !v)}>
+                    {timeMapShowAll ? "Show less" : "Show all"}
+                  </button>
+                </div>
+              }
+            />
+
             {!tempoMap.length ? (
               <div className="small">{t.noScript}</div>
             ) : (
@@ -2315,30 +2596,44 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
                       <div className="row">
                         <Badge tone="blue">#{s.idx}</Badge>
                         <Badge>Pace: {s.pace}</Badge>
-                        <Badge tone={s.intensity === "emphatic" ? "green" : s.intensity === "soft" ? "warn" : "default"}>Intensity: {s.intensity}</Badge>
+                        <Badge tone={s.intensity === "emphatic" ? "green" : s.intensity === "soft" ? "warn" : "default"}>
+                          Intensity: {s.intensity}
+                        </Badge>
                       </div>
                       <Badge>{s.durationSec}s</Badge>
                     </div>
+
                     <div style={{ marginTop: 6 }}>{s.text}</div>
-                    <div className="small" style={{ marginTop: 6, opacity: 0.8 }}>Section: {s.sectionLabel || "—"}</div>
+                    <div className="small" style={{ marginTop: 6, opacity: 0.8 }}>
+                      Section: {s.sectionLabel || "—"}
+                    </div>
                   </div>
                 ))}
               </div>
             )}
+
             {timeline && (
               <div className="row" style={{ justifyContent: "space-between", marginTop: 10 }}>
-                <Badge>Total: {timeline.totalDurationSec}s (Target {timeline.targetDurationSec}s) • Δ {timeline.deltaSec > 0 ? "+" : ""}{timeline.deltaSec}s</Badge>
-                <Badge>A-Roll: {timeline.tracks.aRoll.length} • B-Roll: {timeline.tracks.bRoll.length}</Badge>
+                <Badge>
+                  Total: {timeline.totalDurationSec}s (Target {timeline.targetDurationSec}s) • Δ {timeline.deltaSec > 0 ? "+" : ""}
+                  {timeline.deltaSec}s
+                </Badge>
+                <Badge>
+                  A-Roll: {timeline.tracks.aRoll.length} • B-Roll: {timeline.tracks.bRoll.length}
+                </Badge>
               </div>
             )}
           </div>
         </div>
 
+        {/* RIGHT PANEL / SIDEBAR */}
         <div className={"panel " + (sidebarOpen ? "" : "sidebar-collapsed")}>
           <div className="step-indicator">
             <div className="info-tag">Inventory-aware outputs</div>
             <div className="row" style={{ justifyContent: "space-between" }}>
-              <Badge><Settings size={14} /> Sidebar</Badge>
+              <Badge>
+                <Settings size={14} /> Sidebar
+              </Badge>
               <Badge tone="blue">{preset.primary}</Badge>
             </div>
           </div>
@@ -2346,7 +2641,11 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
           <div className="info-tag">Needs List</div>
           <div className="card" style={{ marginBottom: 12 }}>
             <ul className="card-items">
-              {needsList.map((n) => (<li key={n.id}><b>{n.category}:</b> {n.have} — <span className="small">{n.suggestion}</span></li>))}
+              {needsList.map((n) => (
+                <li key={n.id}>
+                  <b>{n.category}:</b> {n.have} — <span className="small">{n.suggestion}</span>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -2354,8 +2653,15 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
           <div style={{ display: "grid", gap: 10, marginBottom: 12 }}>
             {directorCards.map((c, idx) => (
               <div key={idx} className="card">
-                <div className="card-title"><span>{c.title}</span><Badge>{c.tag}</Badge></div>
-                <ul className="card-items">{c.items.map((it, i) => (<li key={i}>{it}</li>))}</ul>
+                <div className="card-title">
+                  <span>{c.title}</span>
+                  <Badge>{c.tag}</Badge>
+                </div>
+                <ul className="card-items">
+                  {c.items.map((it, i) => (
+                    <li key={i}>{it}</li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
@@ -2368,11 +2674,16 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
               {bRoll.map((b) => (
                 <div key={b.id} className="b-roll-card">
                   <div className="row" style={{ justifyContent: "space-between" }}>
-                    <Badge tone="green"><Video size={14} /> {b.shotType}</Badge>
+                    <Badge tone="green">
+                      <Video size={14} /> {b.shotType}
+                    </Badge>
                     <Badge>{b.durationSec}s</Badge>
                   </div>
+
                   <div style={{ marginTop: 8, fontWeight: 900 }}>{b.sceneTitle}</div>
-                  <div className="small" style={{ marginTop: 6 }}>{b.instruction}</div>
+                  <div className="small" style={{ marginTop: 6 }}>
+                    {b.instruction}
+                  </div>
                 </div>
               ))}
             </div>
@@ -2382,8 +2693,13 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
 
           <div className="info-tag">Quick note</div>
           <div className="card">
-            <div className="row" style={{ gap: 8 }}><AlertTriangle size={16} /><b>Scene parsing</b></div>
-            <div className="small" style={{ marginTop: 8 }}>{t.timeMapFix}</div>
+            <div className="row" style={{ gap: 8 }}>
+              <AlertTriangle size={16} />
+              <b>Scene parsing</b>
+            </div>
+            <div className="small" style={{ marginTop: 8 }}>
+              {t.timeMapFix}
+            </div>
           </div>
         </div>
       </div>
@@ -2391,16 +2707,85 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
       {toast && <div className="toast">{toast}</div>}
 
       <style>{`
-        .topnav{ position: sticky; top: 0; z-index: 9998; display:flex; justify-content: space-between; align-items:center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(16,16,18,0.78); backdrop-filter: blur(10px); }
+        .topnav{
+          position: sticky;
+          top: 0;
+          z-index: 9998;
+          display:flex;
+          justify-content: space-between;
+          align-items:center;
+          gap: 12px;
+          padding: 10px 14px;
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+          background: rgba(16,16,18,0.78);
+          backdrop-filter: blur(10px);
+        }
         .topnav-left{ display:flex; align-items:center; gap: 12px; flex-wrap: wrap; }
         .topnav-right{ display:flex; align-items:center; gap: 10px; }
-        .navlink{ text-decoration:none; color: rgba(255,255,255,0.92); font-weight: 950; padding: 6px 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); }
+        .navlink{
+          text-decoration:none;
+          color: rgba(255,255,255,0.92);
+          font-weight: 950;
+          padding: 6px 10px;
+          border-radius: 10px;
+          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(255,255,255,0.04);
+        }
         .navlink:hover{ background: rgba(255,255,255,0.06); }
         .nav-on{ border-color: rgba(0,122,255,0.45); background: rgba(0,122,255,0.14); color: #cfe7ff; }
-        .navmeta{ opacity: 0.85; font-size: 12px; font-weight: 900; display:flex; align-items:center; gap: 8px; padding: 0 6px; }
+        .navmeta{
+          opacity: 0.85;
+          font-size: 12px;
+          font-weight: 900;
+          display:flex;
+          align-items:center;
+          gap: 8px;
+          padding: 0 6px;
+        }
         .dot{ width: 6px; height: 6px; border-radius: 999px; background: rgba(255,255,255,0.65); display:inline-block; }
 
-        .chip{ border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.92); padding: 8px 10px; border-radius: 999px; font-weight: 900; cursor: pointer; }
+        /* Minimal shared styles (your existing CSS can override these) */
+        .row{ display:flex; align-items:center; gap: 10px; flex-wrap: wrap; }
+        .btn{
+          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(255,255,255,0.06);
+          color: rgba(255,255,255,0.92);
+          padding: 10px 12px;
+          border-radius: 12px;
+          cursor: pointer;
+          font-weight: 900;
+        }
+        .btn:hover{ background: rgba(255,255,255,0.08); }
+        .btn-ghost{ background: rgba(255,255,255,0.04); }
+        .btn-danger{ border-color: rgba(255, 99, 99, 0.35); }
+        .btn-green{ border-color: rgba(81,207,102,0.35); }
+
+        .badge{
+          display:inline-flex;
+          align-items:center;
+          gap: 6px;
+          padding: 6px 10px;
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(255,255,255,0.04);
+          color: rgba(255,255,255,0.92);
+          font-size: 12px;
+          font-weight: 900;
+          white-space: nowrap;
+        }
+        .badge-blue{ border-color: rgba(0,122,255,0.45); background: rgba(0,122,255,0.14); color: #cfe7ff; }
+        .badge-green{ border-color: rgba(81,207,102,0.45); background: rgba(81,207,102,0.14); }
+        .badge-warn{ border-color: rgba(255,193,7,0.45); background: rgba(255,193,7,0.12); }
+
+        .chip{
+          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(255,255,255,0.04);
+          color: rgba(255,255,255,0.92);
+          padding: 8px 10px;
+          border-radius: 999px;
+          font-weight: 900;
+          cursor: pointer;
+        }
         .chip:hover{ background: rgba(255,255,255,0.06); }
         .chip-on{ border-color: rgba(0,122,255,0.45); background: rgba(0,122,255,0.14); color: #cfe7ff; }
 
@@ -2410,15 +2795,19 @@ function MainApp({ t, authUser, profile, refreshProfile, onUILanguageChange }) {
         .inv-title{ display:flex; align-items:center; gap:8px; font-weight: 950; margin-bottom: 8px; }
         .inv-row{ display:flex; align-items:center; gap:8px; padding: 6px 2px; color: rgba(255,255,255,0.92); font-weight: 800; }
 
-        .time-map .time-row{ border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); border-radius: 12px; padding: 10px; margin-bottom: 10px; }
+        .time-map .time-row{
+          border: 1px solid rgba(255,255,255,0.10);
+          background: rgba(255,255,255,0.03);
+          border-radius: 12px;
+          padding: 10px;
+          margin-bottom: 10px;
+        }
       `}</style>
     </div>
   );
 }
 
-/* -----------------------------
-   Root Router App
------------------------------- */
+/* ----------------------------- Root Router App ------------------------------ */
 export default function App() {
   const [uiLanguage, setUiLanguage] = useState("Turkish");
   const uiKey = uiLocaleFromInput(uiLanguage);
@@ -2431,7 +2820,6 @@ export default function App() {
   const refreshProfile = useCallback(async () => {
     const { data: ud, error: uerr } = await supabase.auth.getUser();
     if (uerr) console.error("getUser error:", uerr);
-
     const u = ud?.user || null;
     setAuthUser(u);
 
@@ -2477,6 +2865,7 @@ export default function App() {
     try {
       const pendingRaw = localStorage.getItem(LS_PENDING_PROFILE);
       const pending = pendingRaw ? safeJsonParse(pendingRaw) : null;
+
       if (pending && u?.id) {
         const patch = {
           first_name: pending.first_name || null,
@@ -2518,7 +2907,14 @@ export default function App() {
 
   return (
     <Router>
-      <TopNav t={t} authUser={authUser} profile={profile} onOpenAuth={() => setAuthOpen(true)} onLogout={signOut} />
+      <TopNav
+        t={t}
+        authUser={authUser}
+        profile={profile}
+        onOpenAuth={() => setAuthOpen(true)}
+        onLogout={signOut}
+      />
+
       <AuthModal t={t} open={authOpen} onClose={() => setAuthOpen(false)} onSignedIn={refreshProfile} />
 
       <Routes>
