@@ -9,7 +9,7 @@ function requireEnv(name) {
 
 function getBearerToken(req) {
   const h = req.headers?.authorization || req.headers?.Authorization || "";
-  const m = h.match(/^Bearer\\s+(.+)$/i);
+  const m = h.match(/^Bearer\s+(.+)$/i);
   return m ? m[1] : "";
 }
 
