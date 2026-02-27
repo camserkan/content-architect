@@ -9,7 +9,7 @@ function requireEnv(name) {
 
 function getBearerToken(req) {
   const h = req.headers?.authorization || req.headers?.Authorization || "";
-  const m = h.match(/^Bearer\s+(.+)$/i);
+  const m = h.match(/^Bearer\\s+(.+)$/i);
   return m ? m[1] : "";
 }
 
@@ -56,6 +56,16 @@ async function readProfileByUserId(userId) {
   return data || null;
 }
 
+async function consumeCredit(userId, amount = 1) {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase.rpc("consume_credit", {
+    p_user_id: userId,
+    p_amount: amount,
+  });
+  if (error) throw error;
+  return data;
+}
+
 export default async function handler(req, res) {
   try {
     if (req.method !== "POST") return res.status(405).json({ ok: false, error: "Method not allowed" });
@@ -66,7 +76,16 @@ export default async function handler(req, res) {
     const profile = await readProfileByUserId(user.id);
     if (!profile) return res.status(403).json({ ok: false, error: "Profile not found" });
     if (!profile.is_paid) return res.status(402).json({ ok: false, error: "Paid plan required" });
-    if ((profile.credits ?? 0) <= 0) return res.status(402).json({ ok: false, error: "No credits" });
+
+    try {
+      await consumeCredit(user.id, 1);
+    } catch (e) {
+      const msg = String(e?.message || e);
+      if (msg.includes("INSUFFICIENT_CREDITS")) {
+        return res.status(402).json({ ok: false, error: "No credits" });
+      }
+      throw e;
+    }
 
     const { provider = "openai", model = "gpt-4o-mini", temperature = 0.7, messages = [] } = req.body || {};
 
