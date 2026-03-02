@@ -7,8 +7,20 @@ function requireEnv(name) {
   return v;
 }
 
+function readHeader(req, name) {
+  // Vercel/Node API route: req.headers is a plain object.
+  if (req?.headers && typeof req.headers === "object" && typeof req.headers.get !== "function") {
+    return req.headers[name] || req.headers[name.toLowerCase()] || "";
+  }
+  // Edge/Fetch style: Headers instance with .get().
+  if (req?.headers && typeof req.headers.get === "function") {
+    return req.headers.get(name) || req.headers.get(name.toLowerCase()) || "";
+  }
+  return "";
+}
+
 function getBearerToken(req) {
-  const h = req.headers.get("authorization") || "";
+  const h = readHeader(req, "authorization");
   const m = h.match(/^Bearer\s+(.+)$/i);
   return m ? m[1] : "";
 }
